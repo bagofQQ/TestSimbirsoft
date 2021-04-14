@@ -15,11 +15,11 @@ import java.util.concurrent.TimeUnit;
 
 public class LoginTest {
 
-    public static LoginPage loginPage;
-    public static ProfilePage profilePage;
-    public static WebDriver webDriver;
+    private static LoginPage loginPage;
+    private static ProfilePage profilePage;
+    private static WebDriver webDriver;
 
-    public static String nodeUrl;
+    private static String nodeUrl;
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
@@ -59,7 +59,7 @@ public class LoginTest {
         profilePage.clickFoldersBtn();
         profilePage.clickIncomingBtn();
 
-        String incomingMail = profilePage.getIncomingMail();
+        String incomingMail = profilePage.getMailCount();
 
 
         profilePage.clickWriteLetter();
@@ -69,11 +69,32 @@ public class LoginTest {
         profilePage.inputTextFieldString(incomingMail);
 
         profilePage.clickSendBtn();
+
+        profilePage.clickRefreshBtn();
+
+        profilePage.clickFoldersBtn();
+        profilePage.clickSentBtn();
+
+        String sentMail = profilePage.getMailCount();
+
+        if(check(incomingMail, sentMail) == 1){
+            profilePage.checkingMailSendGood();
+        } else {
+            profilePage.checkingMailSendFail();
+        }
     }
 
     @AfterClass
     public static void tearDown() {
         webDriver.quit();
+    }
+
+    private static int check(String incomingMail, String sentMail){
+        String incomingMailNumber = incomingMail.replaceAll("[^0-9]", "");
+        String sentMailNumber = sentMail.replaceAll("[^0-9]", "");
+        int incomingMailCount = Integer.parseInt(incomingMailNumber);
+        int sentMailCount = Integer.parseInt(sentMailNumber);
+        return sentMailCount-incomingMailCount;
     }
 
 }

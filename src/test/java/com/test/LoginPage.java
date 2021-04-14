@@ -9,34 +9,34 @@ import org.openqa.selenium.support.PageFactory;
 
 public class LoginPage {
 
-    public WebDriver webDriver;
+    private WebDriver webDriver;
 
-    public LoginPage(WebDriver webDriver) {
+    protected LoginPage(WebDriver webDriver) {
         PageFactory.initElements(webDriver, this);
         this.webDriver = webDriver;
     }
 
-    @FindBy(xpath = "//*[contains(@id, 'passp-field-login')]")
+    @FindBy(id = "passp-field-login")
     private WebElement loginField;
 
     @FindBy(xpath = "//*[contains(text(), 'Войти')]/..")
     private WebElement loginBtn;
 
-    @FindBy(xpath = "//*[contains(@id, 'passp-field-passwd')]")
+    @FindBy(id = "passp-field-passwd")
     private WebElement passwdField;
 
     @Step
-    public void inputLogin(String login) {
+    protected void inputLogin(String login) {
         loginField.sendKeys(login);
     }
 
     @Step
-    public void inputPasswd(String password) {
+    protected void inputPasswd(String password) {
         passwdField.sendKeys(password);
     }
 
     @Step
-    public void clickLoginBtn() {
+    protected void clickLoginBtn() {
         loginBtn.click();
     }
 }

@@ -8,38 +8,38 @@ import org.openqa.selenium.support.PageFactory;
 
 public class ProfilePage {
 
-    public WebDriver webDriver;
+    private WebDriver webDriver;
 
-    public ProfilePage(WebDriver webDriver) {
+    protected ProfilePage(WebDriver webDriver) {
         PageFactory.initElements(webDriver, this);
         this.webDriver = webDriver;
     }
 
-    @FindBy(xpath = "//*[contains(@class, 'user-account__name')]")
+    @FindBy(className = "user-account__name")
     private WebElement userMenu;
 
-    @FindBy(xpath = "//*[contains(@class, 'menu__item menu__item_type_link legouser__menu-item legouser__menu-item_action_mail')]")
+    @FindBy(xpath = "//*[contains(text(), 'Почта')]")
     private WebElement userPost;
 
-    @FindBy(xpath = "//*[contains(@class, 'control textinput textinput_theme_normal textinput_view_default textinput_size_n textinput_has-icon_yes textinput_icon-right_yes textinput_tone_mail-suggest-themed search-input__form-input')]")
+    @FindBy(className = "search-input__text-bubble-container")
     private WebElement searchFieldClick;
 
-    @FindBy(xpath = "//*[contains(@class, 'textinput__control')]")
+    @FindBy(className = "textinput__control")
     private WebElement searchField;
 
     @FindBy(xpath = "//*[contains(text(), 'Найти')]/..")
     private WebElement searchBtn;
 
-    @FindBy(xpath = "//*[@id=\"nb-1\"]/body/div[2]/div[7]/div/div[3]/div[3]/div[1]/div/div/button[3]")
+    @FindBy(xpath = "//*[contains(span, 'Папки')]")
     private WebElement foldersBtn;
 
-    @FindBy(css = "body > div.popup2.popup2_view_default.popup2_theme_normal.popup2_direction_bottom-left.popup2_visible_yes.popup2_target_anchor > div > div > div:nth-child(1)")
+    @FindBy(xpath = "//span[text()='Входящие']/ancestor::div[@class='control menu__item menu__item_type_option']")
     private WebElement incomingBtn;
 
-    @FindBy(xpath = "//*[@id=\"nb-1\"]/body/div[2]/div[7]/div/div[3]/div[3]/div[2]/div[5]/div[1]/div/div/div[2]/div/div[1]/div/span/span")
+    @FindBy(xpath = "//span[@class='mail-MessagesSearchInfo-Title_misc nb-with-xs-left-gap']")
     private WebElement resultIncomingMail;
 
-    @FindBy(xpath = "//*[contains(@class, 'mail-ComposeButton-Text')]")
+    @FindBy(className = "mail-ComposeButton-Text")
     private WebElement writeLetter;
 
     @FindBy(xpath = "//*[contains(@class, 'composeYabbles')]")
@@ -48,77 +48,103 @@ public class ProfilePage {
     @FindBy(xpath = "//*[contains(@class, 'composeTextField ComposeSubject-TextField')]")
     private WebElement subjectField;
 
-    @FindBy(xpath = "//*[contains(@class, 'cke_wysiwyg_div cke_reset cke_enable_context_menu cke_editable cke_editable_themed cke_contents_ltr cke_htmlplaceholder')]")
+    @FindBy(xpath = "//*[contains(@class, 'cke_htmlplaceholder')]")
     private WebElement textField;
 
-    @FindBy(xpath = "//*[contains(@class, 'control button2 button2_view_default button2_tone_default button2_size_l button2_theme_action button2_pin_circle-circle ComposeControlPanelButton-Button ComposeControlPanelButton-Button_action')]")
+    @FindBy(xpath = "//*[contains(span, 'Отправить')]")
     private WebElement sendBtn;
 
+    @FindBy(xpath = "//span[text()='Отправленные']/ancestor::div[@class='control menu__item menu__item_type_option']")
+    private WebElement sentBtn;
+
+    @FindBy(xpath = "//*[contains(@class, 'mail-ComposeButton-Refresh js-main-action-refresh ns-action')]")
+    private WebElement refreshBtn;
+
     @Step
-    public void clickUserMenu() {
+    protected void clickUserMenu() {
         userMenu.click();
     }
 
     @Step
-    public void clickUserPost() {
+    protected void clickUserPost() {
         userPost.click();
     }
 
     @Step
-    public void clickSearchField() {
+    protected void clickSearchField() {
         searchFieldClick.click();
     }
 
     @Step
-    public void inputSearchString(String searchString) {
+    protected void inputSearchString(String searchString) {
         searchField.sendKeys(searchString);
     }
 
     @Step
-    public void clickSearchBtn() {
+    protected void clickSearchBtn() {
         searchBtn.click();
     }
 
     @Step
-    public void clickFoldersBtn() {
+    protected void clickFoldersBtn() throws InterruptedException {
+        Thread.sleep(1500);
         foldersBtn.click();
     }
 
     @Step
-    public void clickIncomingBtn() {
+    protected void clickIncomingBtn() {
         incomingBtn.click();
     }
 
     @Step
-    public String getIncomingMail() throws InterruptedException {
-        Thread.sleep(300);
+    protected String getMailCount() throws InterruptedException {
+        Thread.sleep(600);
         String result = resultIncomingMail.getText();
         return result;
     }
 
     @Step
-    public void clickWriteLetter() {
+    protected void clickWriteLetter() {
         writeLetter.click();
     }
 
     @Step
-    public void inputWhomFieldString(String whomFieldString) {
+    protected void inputWhomFieldString(String whomFieldString) {
         whomField.sendKeys(whomFieldString);
     }
 
     @Step
-    public void inputSubjectFieldString(String subjectFieldString) {
+    protected void inputSubjectFieldString(String subjectFieldString) {
         subjectField.sendKeys(subjectFieldString);
     }
 
     @Step
-    public void inputTextFieldString(String textFieldString) {
+    protected void inputTextFieldString(String textFieldString) {
         textField.sendKeys(textFieldString);
     }
 
     @Step
-    public void clickSendBtn() {
+    protected void clickSendBtn() {
         sendBtn.click();
     }
 
+    @Step
+    protected void clickSentBtn() {
+        sentBtn.click();
+    }
+
+    @Step
+    protected void checkingMailSendGood(){
+        System.out.println("Письмо отправлено");
+    }
+
+    @Step
+    protected void checkingMailSendFail(){
+        System.out.println("Письмо не отправлено");
+    }
+
+    @Step
+    protected void clickRefreshBtn() {
+        refreshBtn.click();
+    }
 }
