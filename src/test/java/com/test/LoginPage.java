@@ -7,36 +7,33 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 
-public class LoginPage {
-
+class LoginPage {
     private WebDriver webDriver;
 
-    protected LoginPage(WebDriver webDriver) {
+    LoginPage(WebDriver webDriver) {
         PageFactory.initElements(webDriver, this);
         this.webDriver = webDriver;
     }
 
     @FindBy(id = "passp-field-login")
     private WebElement loginField;
-
     @FindBy(xpath = "//*[contains(text(), 'Войти')]/..")
     private WebElement loginBtn;
-
     @FindBy(id = "passp-field-passwd")
     private WebElement passwdField;
 
     @Step
-    protected void inputLogin(String login) {
+    void inputLogin(String login) {
         loginField.sendKeys(login);
     }
 
     @Step
-    protected void inputPasswd(String password) {
+    void inputPasswd(String password) {
         passwdField.sendKeys(password);
     }
 
     @Step
-    protected void clickLoginBtn() {
+    void clickLoginBtn() {
         loginBtn.click();
     }
 }

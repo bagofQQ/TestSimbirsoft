@@ -4,9 +4,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class ConfProperties {
-    protected static FileInputStream fileInputStream;
-    protected static Properties properties;
+class ConfProperties {
+    private static FileInputStream fileInputStream;
+    private static Properties properties;
 
     static {
         try {
@@ -25,7 +25,7 @@ public class ConfProperties {
         }
     }
 
-    public static String getProperty(String key){
+    static String getProperty(String key) {
         return properties.getProperty(key);
     }
 }

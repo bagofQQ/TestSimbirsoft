@@ -14,16 +14,13 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 public class LoginTest {
-
     private static LoginPage loginPage;
     private static ProfilePage profilePage;
     private static WebDriver webDriver;
-
     private static String nodeUrl;
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
-
         nodeUrl = ConfProperties.getProperty("nodeUrl");
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         capabilities.setBrowserName("chrome");
@@ -43,58 +40,35 @@ public class LoginTest {
     @Story(value = "LoginTest1")
     @Test
     public void loginTest() throws InterruptedException {
-
         loginPage.inputLogin(ConfProperties.getProperty("login"));
         loginPage.clickLoginBtn();
         loginPage.inputPasswd(ConfProperties.getProperty("password"));
         loginPage.clickLoginBtn();
-
         profilePage.clickUserMenu();
         profilePage.clickUserPost();
         profilePage.clickSearchField();
-
         profilePage.inputSearchString("Simbirsoft Тестовое задание");
         profilePage.clickSearchBtn();
-
+        String resultMailCountBeforeSortIncoming = profilePage.getMailCountBeforeSort();
         profilePage.clickFoldersBtn();
         profilePage.clickIncomingBtn();
-
-        String incomingMail = profilePage.getMailCount();
-
-
+        String incomingMail = profilePage.getMailCountAfterSort(resultMailCountBeforeSortIncoming);
         profilePage.clickWriteLetter();
-
         profilePage.inputWhomFieldString(ConfProperties.getProperty("email"));
         profilePage.inputSubjectFieldString("Simbirsoft Тестовое задание. Алексеев");
         profilePage.inputTextFieldString(incomingMail);
-
         profilePage.clickSendBtn();
-
         profilePage.clickRefreshBtn();
-
+        String resultMailCountBeforeSortSent = profilePage.getMailCountBeforeSort();
+        profilePage.clickRefreshBtn();
         profilePage.clickFoldersBtn();
         profilePage.clickSentBtn();
-
-        String sentMail = profilePage.getMailCount();
-
-        if(check(incomingMail, sentMail) == 1){
-            profilePage.checkingMailSendGood();
-        } else {
-            profilePage.checkingMailSendFail();
-        }
+        String sentMail = profilePage.getMailCountAfterSort(resultMailCountBeforeSortSent);
+        profilePage.checkingMailSend(incomingMail, sentMail);
     }
 
     @AfterClass
     public static void tearDown() {
         webDriver.quit();
     }
-
-    private static int check(String incomingMail, String sentMail){
-        String incomingMailNumber = incomingMail.replaceAll("[^0-9]", "");
-        String sentMailNumber = sentMail.replaceAll("[^0-9]", "");
-        int incomingMailCount = Integer.parseInt(incomingMailNumber);
-        int sentMailCount = Integer.parseInt(sentMailNumber);
-        return sentMailCount-incomingMailCount;
-    }
-
 }
