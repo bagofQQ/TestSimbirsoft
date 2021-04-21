@@ -2,6 +2,7 @@ package com.test;
 
 import io.qameta.allure.*;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Platform;
@@ -33,38 +34,34 @@ public class LoginTest {
         webDriver.get(ConfProperties.getProperty("loginpage"));
     }
 
-    @Epic("TESTING FOR https://passport.yandex.ru")
+    @Epic("TESTING FOR https://mail.yandex.ru")
     @Feature(value = "Login Tests")
     @Severity(SeverityLevel.MINOR)
     @Description("In this test, we will login and check the work of the mail")
     @Story(value = "LoginTest1")
     @Test
     public void loginTest() throws InterruptedException {
+        loginPage.clickLoginBtn();
         loginPage.inputLogin(ConfProperties.getProperty("login"));
         loginPage.clickLoginBtn();
         loginPage.inputPasswd(ConfProperties.getProperty("password"));
         loginPage.clickLoginBtn();
-        profilePage.clickUserMenu();
-        profilePage.clickUserPost();
         profilePage.clickSearchField();
         profilePage.inputSearchString("Simbirsoft Тестовое задание");
         profilePage.clickSearchBtn();
-        String resultMailCountBeforeSortIncoming = profilePage.getMailCountBeforeSort();
         profilePage.clickFoldersBtn();
         profilePage.clickIncomingBtn();
-        String incomingMail = profilePage.getMailCountAfterSort(resultMailCountBeforeSortIncoming);
+        int incomingMailCount = profilePage.getIncomingMailCount();
         profilePage.clickWriteLetter();
         profilePage.inputWhomFieldString(ConfProperties.getProperty("email"));
         profilePage.inputSubjectFieldString("Simbirsoft Тестовое задание. Алексеев");
-        profilePage.inputTextFieldString(incomingMail);
+        profilePage.inputTextFieldString("Количество входящих писем - " + String.valueOf(incomingMailCount));
         profilePage.clickSendBtn();
-        profilePage.clickRefreshBtn();
-        String resultMailCountBeforeSortSent = profilePage.getMailCountBeforeSort();
         profilePage.clickRefreshBtn();
         profilePage.clickFoldersBtn();
         profilePage.clickSentBtn();
-        String sentMail = profilePage.getMailCountAfterSort(resultMailCountBeforeSortSent);
-        profilePage.checkingMailSend(incomingMail, sentMail);
+        int sentMailCount = profilePage.getSentMailCount();
+        Assert.assertFalse("Письмо не отправлено", profilePage.checkingMailSend(incomingMailCount,sentMailCount));
     }
 
     @AfterClass

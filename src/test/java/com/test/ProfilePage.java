@@ -1,7 +1,6 @@
 package com.test;
 
 import io.qameta.allure.Step;
-import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,18 +9,18 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
+
 class ProfilePage {
-    private WebDriver webDriver;
+    private final WebDriver webDriver;
+    private final WebDriverWait wait;
 
     ProfilePage(WebDriver webDriver) {
         PageFactory.initElements(webDriver, this);
         this.webDriver = webDriver;
+        this.wait = new WebDriverWait(webDriver, 10);
     }
 
-    @FindBy(className = "user-account__name")
-    private WebElement userMenu;
-    @FindBy(xpath = "//*[contains(text(), 'Почта')]")
-    private WebElement userPost;
     @FindBy(className = "search-input__text-bubble-container")
     private WebElement searchFieldClick;
     @FindBy(className = "textinput__control")
@@ -32,8 +31,10 @@ class ProfilePage {
     private WebElement foldersBtn;
     @FindBy(xpath = "//span[text()='Входящие']/ancestor::div[@class='control menu__item menu__item_type_option']")
     private WebElement incomingBtn;
-    @FindBy(xpath = "//span[@class='mail-MessagesSearchInfo-Title_misc nb-with-xs-left-gap']")
-    private WebElement resultMailCount;
+    @FindBy(xpath = "//div[@class='mail-MessageSnippet-Wrapper']//span[text()='Входящие']")
+    private List<WebElement> mailIncomingList;
+    @FindBy(xpath = "//div[@class='mail-MessageSnippet-Wrapper']//span[text()='Отправленные']")
+    private List<WebElement> mailSentList;
     @FindBy(xpath = "//*[contains(@class, 'mail-ComposeButton js-main-action-compose')]")
     private WebElement writeLetter;
     @FindBy(xpath = "//*[contains(@class, 'composeYabbles')]")
@@ -48,16 +49,6 @@ class ProfilePage {
     private WebElement sentBtn;
     @FindBy(xpath = "//*[contains(@class, 'mail-ComposeButton-Refresh js-main-action-refresh ns-action')]")
     private WebElement refreshBtn;
-
-    @Step
-    void clickUserMenu() {
-        userMenu.click();
-    }
-
-    @Step
-    void clickUserPost() {
-        userPost.click();
-    }
 
     @Step
     void clickSearchField() {
@@ -76,41 +67,28 @@ class ProfilePage {
 
     @Step
     void clickFoldersBtn() {
-        WebDriverWait wait = new WebDriverWait(webDriver, 10);
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(span, 'Папки')]")));
         foldersBtn.click();
     }
 
     @Step
     void clickIncomingBtn() {
-        WebDriverWait wait = new WebDriverWait(webDriver, 10);
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Входящие']/ancestor::div[@class='control menu__item menu__item_type_option']")));
         incomingBtn.click();
     }
 
     @Step
-    String getMailCountAfterSort(String resultMailCountBeforeSort) {
-        WebDriverWait wait = new WebDriverWait(webDriver, 10);
-        wait.until(webDriver1 -> {
-            String resultMailCountAfterSort = webDriver.findElement(By.xpath("//span[@class='mail-MessagesSearchInfo-Title_misc nb-with-xs-left-gap']")).getText();
-            if (resultMailCountAfterSort.equals(resultMailCountBeforeSort)) {
-                return false;
-            }
-            return true;
-        });
-        String result = resultMailCount.getText();
-        return result;
+    int getIncomingMailCount() {
+        return mailIncomingList.size();
     }
 
     @Step
-    String getMailCountBeforeSort() {
-        String result = resultMailCount.getText();
-        return result;
+    int getSentMailCount() {
+        return mailSentList.size();
     }
 
     @Step
     void clickWriteLetter() {
-        WebDriverWait wait = new WebDriverWait(webDriver, 10);
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(@class, 'mail-ComposeButton js-main-action-compose')]")));
         writeLetter.click();
     }
@@ -137,25 +115,17 @@ class ProfilePage {
 
     @Step
     void clickSentBtn() {
-        WebDriverWait wait = new WebDriverWait(webDriver, 10);
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Отправленные']/ancestor::div[@class='control menu__item menu__item_type_option']")));
         sentBtn.click();
     }
 
     @Step
-    void checkingMailSend(String incomingMail, String sentMail) {
-        String incomingMailNumber = incomingMail.replaceAll("[^0-9]", "");
-        String sentMailNumber = sentMail.replaceAll("[^0-9]", "");
-        int incomingMailCount = Integer.parseInt(incomingMailNumber);
-        int sentMailCount = Integer.parseInt(sentMailNumber);
-        int differenceToCheck = sentMailCount - incomingMailCount;
-        Assert.assertTrue("Письмо отправлено", differenceToCheck == 1);
-        Assert.assertFalse("Письмо не отправлено", differenceToCheck != 1);
+    boolean checkingMailSend(int incomingMailCount, int sentMailCount) {
+        return sentMailCount - incomingMailCount != 1;
     }
 
     @Step
     void clickRefreshBtn() {
-        WebDriverWait wait = new WebDriverWait(webDriver, 10);
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(@class, 'mail-ComposeButton-Refresh js-main-action-refresh ns-action')]")));
         refreshBtn.click();
     }
