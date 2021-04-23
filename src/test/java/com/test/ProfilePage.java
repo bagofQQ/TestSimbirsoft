@@ -67,13 +67,13 @@ class ProfilePage {
 
     @Step
     void clickFoldersBtn() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(span, 'Папки')]")));
+        wait.until(ExpectedConditions.elementToBeClickable(foldersBtn));
         foldersBtn.click();
     }
 
     @Step
     void clickIncomingBtn() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Входящие']/ancestor::div[@class='control menu__item menu__item_type_option']")));
+        wait.until(ExpectedConditions.elementToBeClickable(incomingBtn));
         incomingBtn.click();
     }
 
@@ -89,7 +89,7 @@ class ProfilePage {
 
     @Step
     void clickWriteLetter() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(@class, 'mail-ComposeButton js-main-action-compose')]")));
+        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(writeLetter)));
         writeLetter.click();
     }
 
@@ -115,7 +115,7 @@ class ProfilePage {
 
     @Step
     void clickSentBtn() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[text()='Отправленные']/ancestor::div[@class='control menu__item menu__item_type_option']")));
+        wait.until(ExpectedConditions.elementToBeClickable(sentBtn));
         sentBtn.click();
     }
 
@@ -126,7 +126,7 @@ class ProfilePage {
 
     @Step
     void clickRefreshBtn() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[contains(@class, 'mail-ComposeButton-Refresh js-main-action-refresh ns-action')]")));
+        wait.until(ExpectedConditions.elementToBeClickable(refreshBtn));
         refreshBtn.click();
     }
 }

@@ -40,7 +40,7 @@ public class LoginTest {
     @Description("In this test, we will login and check the work of the mail")
     @Story(value = "LoginTest1")
     @Test
-    public void loginTest() throws InterruptedException {
+    public void loginTest() {
         loginPage.clickLoginBtn();
         loginPage.inputLogin(ConfProperties.getProperty("login"));
         loginPage.clickLoginBtn();
@@ -55,13 +55,13 @@ public class LoginTest {
         profilePage.clickWriteLetter();
         profilePage.inputWhomFieldString(ConfProperties.getProperty("email"));
         profilePage.inputSubjectFieldString("Simbirsoft Тестовое задание. Алексеев");
-        profilePage.inputTextFieldString("Количество входящих писем - " + String.valueOf(incomingMailCount));
+        profilePage.inputTextFieldString("Количество входящих писем - " + incomingMailCount);
         profilePage.clickSendBtn();
         profilePage.clickRefreshBtn();
         profilePage.clickFoldersBtn();
         profilePage.clickSentBtn();
         int sentMailCount = profilePage.getSentMailCount();
-        Assert.assertFalse("Письмо не отправлено", profilePage.checkingMailSend(incomingMailCount,sentMailCount));
+        Assert.assertFalse("Письмо не отправлено", profilePage.checkingMailSend(incomingMailCount, sentMailCount));
     }
 
     @AfterClass
